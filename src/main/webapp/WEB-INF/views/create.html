@@ -12,6 +12,9 @@
     </a>
 </p>
 </center>
+<div th:each="item : ${result}">
+    <h1 style="color: red" th:text="${item.getDefaultMessage()}"></h1>
+</div>
 <div id="form">
     <form th:action="@{/city/save}" method="post" novalidate="novalidate" th:object="${cityNew}">
         <div>
@@ -20,7 +23,9 @@
         </div>
         <div>
             <label>Quốc gia: </label>
-            <input type="text" th:field="*{nameCountry}">
+            <select th:field="*{nameCountry}">
+                <option th:each="categoryL : ${category}" th:text="${categoryL.name}" th:value="${categoryL.name}"></option>
+            </select>
         </div>
         <div>
             <label>Diện tích: </label>

@@ -4,21 +4,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "Bạn có biết nhập tên thành phố không?")
     private String nameCity;
     private String nameCountry;
+    @Min(value = 0, message = "Nhập vào số dương")
     private Long square;
+    @Min(value = 0, message = "Nhập vào số dương")
     private int population;
+    @Min(value = 0, message = "Nhập vào số dương")
     private Long GDP;
+    @NotBlank(message = "Bạn phải nhập mô tả không sẽ bị ăn đấm")
     private String description;
 
 
-    public City(){}
+    public City() {
+    }
 
     public City(Long id, String nameCity, String nameCountry, Long square, int population, Long GDP, String description) {
         this.id = id;

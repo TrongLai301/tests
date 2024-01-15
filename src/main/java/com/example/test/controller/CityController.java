@@ -1,14 +1,18 @@
 package com.example.test.controller;
 
 import com.example.test.model.City;
+import com.example.test.repository.ICategoryRepository;
 import com.example.test.service.ICityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/city")
@@ -16,7 +20,8 @@ public class CityController {
 
     @Autowired
     ICityService iCityService;
-
+    @Autowired
+    ICategoryRepository categoryRepository;
     @GetMapping
     public ModelAndView listCity(){
         ModelAndView modelAndView = new ModelAndView("/list");
@@ -34,15 +39,20 @@ public class CityController {
     @GetMapping("/create")
     public ModelAndView createForm(){
         ModelAndView modelAndView = new ModelAndView("/create");
+        modelAndView.addObject("category",categoryRepository.findAll());
         modelAndView.addObject("cityNew", new City());
         return modelAndView;
     }
 
     @PostMapping("/save")
-    public ModelAndView create(City city){
-        ModelAndView modelAndView = new ModelAndView("redirect:/city");
+    public ModelAndView create(@Valid City city, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            ModelAndView modelAndView = new ModelAndView("/create");
+            modelAndView.addObject("result",bindingResult.getAllErrors());
+            return modelAndView;
+        }
         iCityService.save(city);
-        return modelAndView;
+        return new ModelAndView("redirect:/city");
     }
     @GetMapping("/{id}/edit")
     public ModelAndView showEditForm(@PathVariable Long id) {
